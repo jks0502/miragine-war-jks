@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "miragine-war-ipad",
+  "compatibility_date": "2026-09-25",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./dist/web",
+    "not_found_handling": "single-page-application"
+  }
+}

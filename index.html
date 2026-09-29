@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#14231c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="米拉奇战记">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'">
+  <title>米拉奇战记 · jks重置版</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/app-icon-64.png">
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+<main id="game">
+  <header class="hud">
+    <section class="team-hud red">
+      <div class="army-heading"><span class="banner-mark">◆</span><strong id="red-faction-name">左方阵营</strong><span id="red-role">PLAYER 01</span><span class="castle-value" id="hp0">8000 / 8000</span></div>
+      <div class="health-track"><i id="health-ghost0" class="health-ghost"></i><i id="health0"></i></div>
+      <div class="resources"><div><span class="coin">●</span> 金币 <b id="gold0">400</b></div><div><span class="income-mark">↗</span> 收入 <b id="income0">150</b><small id="income-breakdown0">(150+0)</small></div><div>⚑ 补给 <b id="supply0">24</b><small id="supply-cap0">/24</small></div></div>
+    </section>
+    <div class="clock"><span id="mode-label">普通难度</span><strong id="countdown">20</strong><span id="round">第 1 回合</span></div>
+    <section class="team-hud blue">
+      <div class="army-heading"><span class="banner-mark">◆</span><strong id="blue-faction-name">右方阵营</strong><span id="blue-role">COMPUTER</span><span class="castle-value" id="hp1">8000 / 8000</span></div>
+      <div class="health-track"><i id="health-ghost1" class="health-ghost"></i><i id="health1"></i></div>
+      <div class="resources"><div><span class="coin">●</span> 金币 <b id="gold1">400</b></div><div><span class="income-mark">↗</span> 收入 <b id="income1">150</b><small id="income-breakdown1">(150+0)</small></div><div>⚑ 补给 <b id="supply1">24</b><small id="supply-cap1">/24</small></div></div>
+    </section>
+  </header>
+  <section class="battlefield" aria-label="两个阵营自动交战的草原战场">
+    <canvas id="battle" width="1280" height="500"></canvas>
+    <div class="field-caption">
+      <div class="field-title"><span class="live-dot"></span><span id="field-status">米拉奇平原</span></div>
+      <div class="field-spawn-row"><span class="field-source red-source" id="field-source0">左方阵营下次出兵：前置城墙 · 万箭：待命</span><span class="field-source blue-source" id="field-source1">右方阵营下次出兵：前置城墙 · 万箭：待命</span></div>
+    </div>
+    <div class="field-tools"><button id="center-btn" title="按 F 立即跳到交战区并持续跟随">◎ 跟随战线 [F]</button><button id="speed-btn" title="切换游戏速度">1×</button><button id="pause-btn" title="空格暂停">Ⅱ 暂停</button></div>
+    <div id="spawn-alert" class="spawn-alert" aria-live="assertive"><span>援军抵达</span><strong id="spawn-alert-count">5</strong><div><b id="spawn-alert-source0">前置城墙</b><b id="spawn-alert-source1">前置城墙</b></div></div>
+    <div id="wave-message" class="wave-message"></div>
+    <div class="field-bottom"><span id="army-count">左方 0　·　右方 0</span><span id="elapsed">00:00</span></div>
+  </section>
+  <section class="command-deck">
+    <div class="roster-panel red">
+      <div class="roster-heading"><strong id="red-roster-name">左方军团</strong><span>W A S D 选兵</span><button id="bombard0" class="skill-button" title="消耗 2000 金币，轰炸交战区域，冷却 80 秒">区域火炮 · 2000</button><button id="nuke0" class="skill-button nuke-button" title="核弹：消灭全场单位，并留下五回合污染区">核弹 1/3 · 500</button><button id="auto0" title="只暂停左方出兵，不暂停游戏">暂停出兵</button></div>
+      <div class="roster" id="roster0" aria-label="左方兵种"></div>
+    </div>
+    <div class="intel-panel">
+      <div class="map-heading"><span>战场全览</span><span>拖动查看</span></div>
+      <canvas id="minimap" width="256" height="66" aria-label="点击或拖动移动战场视角"></canvas>
+      <div id="unit-detail" class="unit-detail"></div>
+    </div>
+    <div class="roster-panel blue">
+      <div class="roster-heading"><strong id="blue-roster-name">右方军团</strong><span id="blue-keys">AI 指挥中</span><button id="bombard1" class="skill-button" title="消耗 2000 金币，轰炸交战区域，冷却 80 秒">区域火炮 · 2000</button><button id="nuke1" class="skill-button nuke-button" title="核弹：消灭全场单位，并留下五回合污染区">核弹 1/3 · 500</button><button id="auto1" title="只暂停右方出兵，不暂停游戏">暂停出兵</button></div>
+      <div class="roster" id="roster1" aria-label="右方兵种"></div>
+    </div>
+  </section>
+  <footer><span class="edition">MIRAGINE <i>WAR</i><small>经典重制 · jks重置版</small></span><div><button id="help-btn">玩法说明</button><button id="sound-btn">声音 · 开</button><button id="fullscreen-btn">全屏 F11</button><button id="menu-btn">主菜单</button></div></footer>
+
+  <div class="overlay" id="menu-overlay">
+    <div class="menu-scene" aria-hidden="true">
+      <div class="scene-sky"></div><div class="scene-clouds"></div><div class="scene-moon"></div>
+      <div class="scene-ridge scene-ridge-back"></div><div class="scene-ridge scene-ridge-front"></div>
+      <div class="scene-castle scene-castle-left"></div><div class="scene-castle scene-castle-right"></div>
+      <div class="scene-wall"></div><div class="scene-gate"></div>
+      <div class="scene-banner scene-banner-left"></div><div class="scene-banner scene-banner-right"></div>
+      <div class="scene-fire scene-fire-left"></div><div class="scene-fire scene-fire-right"></div>
+    </div>
+    <div class="menu-card" id="menu-card">
+      <div class="crest"><span></span><i>◆</i><span></span></div>
+      <p class="overline">THE FIRST CAMPAIGN</p>
+      <h1>米拉奇战记</h1><div class="english-title">MIRAGINE <span>WAR</span></div>
+      <div class="ribbon">经典重制 · 六大阵营的战争</div>
+      <p class="intro">集结你的军团，攻破敌方大本营。<br>前置城墙交替出兵，夺回战线主动权。</p>
+      <div class="menu-options" id="main-options">
+        <button class="gold-button" id="single-btn"><span>单人战役</span><small>SINGLE PLAYER</small></button>
+        <button class="stone-button" id="multi-btn"><span>本地双人</span><small>LOCAL VERSUS</small></button>
+        <div class="menu-secondary"><button id="menu-help-btn">玩法说明</button><button id="quit-btn">退出游戏</button></div>
+      </div>
+      <div class="menu-options hidden" id="difficulty-options"><p class="difficulty-heading">选择战役难度</p><div id="difficulties"></div><button class="back-button" id="difficulty-back">← 返回</button></div>
+      <div class="menu-options hidden" id="map-options"><p class="difficulty-heading">选择战场</p><p class="map-intro">本局固定一张地图；天气会在战斗中按阶段自然变化。</p><div id="map-grid"></div><button class="gold-button map-continue" id="map-continue"><span>继续选择阵营</span><small>CHOOSE YOUR FACTION</small></button><button class="back-button" id="map-back">← 返回</button></div>
+      <div class="menu-options hidden" id="faction-options">
+        <p class="difficulty-heading">选择阵营</p>
+        <p class="faction-intro">阵营决定大本营形制、专属色彩、旗帜与战场身份；前置城墙统一为长城。</p>
+        <div class="faction-panels">
+          <section class="faction-side-panel red"><strong>左方 · 玩家 01</strong><div class="faction-feature" id="faction-feature0"><img class="leader-portrait" id="faction-leader0" alt="罗兰王国领导人画像"><canvas class="faction-flag-large" id="faction-flag0" width="150" height="100"></canvas><div><b id="faction-feature-name0">罗兰王国</b><small id="faction-feature-ruler0">领袖：伊莲娜女王</small><small id="faction-feature-base0">大本营：王都石堡</small><em id="faction-feature-description0">旧帝国正统继承者，以王冠与骑士荣光夺回母晶。</em></div></div><div class="faction-grid" id="faction-grid0"></div></section>
+          <div class="faction-vs"><span>VS</span></div>
+          <section class="faction-side-panel blue"><strong>右方 · <span id="faction-side1-label">电脑</span></strong><div class="faction-feature" id="faction-feature1"><img class="leader-portrait" id="faction-leader1" alt="蓝海共和国领导人画像"><canvas class="faction-flag-large" id="faction-flag1" width="150" height="100"></canvas><div><b id="faction-feature-name1">蓝海共和国</b><small id="faction-feature-ruler1">领袖：凯恩首席执政官</small><small id="faction-feature-base1">大本营：海港灯塔</small><em id="faction-feature-description1">沿海城邦与商人议会，以舰队和自由守住海上母晶。</em></div></div><div class="faction-grid" id="faction-grid1"></div></section>
+        </div>
+        <div class="faction-summary" id="faction-summary"></div>
+        <button class="gold-button" id="faction-start"><span>开始战役</span><small>CHOOSE YOUR FACTION</small></button>
+        <button class="back-button" id="faction-back">← 返回</button>
+      </div>
+      <div class="menu-note">六大阵营 / 14 种兵种 / 区域火炮 / 核弹 / 长城万箭齐发</div>
+    </div>
+    <div class="menu-bottom">jks重置版 · 经典玩法的独立源码重制 · v2.0</div>
+  </div>
+
+  <div class="overlay hidden" id="pause-overlay"><div class="dialog"><p class="overline">TAKE A BREATH</p><h2>战斗已暂停</h2><p>整顿军阵，再战一回。</p><button class="gold-button" id="resume-btn">继续战斗</button><button class="stone-button" id="restart-btn">重新开始</button><button class="back-button" id="pause-menu-btn">返回主菜单</button></div></div>
+  <div class="overlay hidden" id="result-overlay"><div class="dialog result"><p class="overline">THE BATTLE IS OVER</p><h2 id="result-title">阵营获胜</h2><p id="result-subtitle"></p><div id="result-stats"></div><button class="gold-button" id="again-btn">再战一局</button><button class="back-button" id="result-menu-btn">返回主菜单</button></div></div>
+  <div class="overlay hidden" id="help-overlay"><div class="dialog help"><p class="overline">FIELD MANUAL</p><h2>战场手册</h2><div class="help-grid"><article><b>01 / 选择阵营与兵种</b><p>每局开始前先为左右两方选择六大阵营。阵营有专属色彩、旗帜、徽记和城堡外观；前置长城统一。点击兵种卡片后，招募栏持续招募该兵种，直到金币、补给或30人战场上限不足。</p></article><article><b>02 / 经营军团</b><p>每 20 秒结算一次收入，大本营保障收入每轮增加50；每点存活部队补给额外产生4金币，部队收益最多为大本营收入的一半。每轮补给恢复至30，阵亡单位从下一次结算起不再产生收益。</p></article><article><b>03 / 寻找克制</b><p>查看兵种对轻甲、重甲的伤害。重甲压制轻甲，远程压制重甲，轻甲依靠速度接近远程；弓箭手负责前期单体射击，法师负责范围清兵，奇异博士负责远程单体破甲。</p></article><article><b>04 / 区域火炮技能</b><p>点击技能栏的“区域火炮”按钮，消耗 2000 金币并自动轰炸当前交战区域；每 80 秒可用一次。前期兵种可被秒杀，中期兵种会被打到残血，爆炸范围内己方士兵会承受少量误伤，但城墙和大本营不会受伤。</p></article><article><b>05 / 核弹技能</b><p>点击“核弹”后，导弹会加速下坠五秒再引爆。每方最多使用三次，费用依次为 500、18888、28888 金币；引爆时全场士兵立即阵亡，城墙与大本营不受伤。落点形成五回合辐射区，进入其中的士兵会持续受到轻微伤害。</p></article><article><b>06 / 攻破大本营</b><p>大本营拥有高防御与高伤害，不能再生；摧毁敌方大本营即可赢得战役。胜负以阵营名称显示。</p></article><article><b>07 / 前置城墙</b><p>每方开局拥有一座位于战线四分之一处的长城。长城未倒塌前会封锁整条纵向防线，敌军只能在城门外攻城；己方援军从中央城门刷新。奇数回合从长城出兵，偶数回合从大本营出兵；长城被摧毁后，只有在反攻摧毁敌方长城时才会立即重建。</p></article></div><div class="controls-guide"><span><kbd>W A S D</kbd> 左方选兵</span><span><kbd>↑ ← ↓ →</kbd> 右方选兵</span><span><kbd>Space</kbd> 暂停</span><span><kbd>F11</kbd> 全屏</span><span><kbd>F</kbd> 立即跳转并跟随交战区</span><span>拖动战场 / 小地图：自由观察</span><span><kbd>Esc</kbd> 返回 / 暂停</span></div><button class="gold-button" id="help-close">明白了，出发</button></div></div>
+</main>
+<div id="rotate-notice" aria-live="polite"><b>请横置 iPad</b><span>横屏可完整显示战场与双侧兵种栏</span></div>
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

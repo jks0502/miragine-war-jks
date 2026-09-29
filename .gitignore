@@ -1,0 +1,9 @@
+node_modules/
+dist/
+artifacts/
+*.log
+.cache/
+.npm-cache/
+.tmp/
+userdata/
+.wrangler/

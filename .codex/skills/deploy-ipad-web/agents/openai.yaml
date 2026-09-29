@@ -1,0 +1,4 @@
+interface:
+  display_name: "发布 iPad 网页版"
+  short_description: "构建、测试并部署最新游戏到固定 Cloudflare 网址"
+  default_prompt: "使用 $deploy-ipad-web 将当前最新版游戏发布到 iPad 网页地址。"

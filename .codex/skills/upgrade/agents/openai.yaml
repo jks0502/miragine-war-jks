@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unit Upgrade"
+  short_description: "Upgrade one named unit with richer movement and attacks"
+  default_prompt: "Use $upgrade to upgrade exactly one specified unit in the Miragine project."

@@ -1,0 +1,27 @@
+{
+  "id": "/",
+  "name": "米拉奇战记 · jks重置版",
+  "short_name": "米拉奇战记",
+  "description": "献给 momosaysay 的六大阵营、十四兵种横版策略战争游戏",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#101412",
+  "theme_color": "#14231c",
+  "icons": [
+    {
+      "src": "assets/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/app-icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

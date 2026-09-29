@@ -1,0 +1,24 @@
+{
+  "name": "miragine-classic-remake",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Editable classic red-versus-blue strategy game for Windows and iPad",
+  "main": "desktop/main.cjs",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/start.mjs",
+    "test": "node --test tests/engine.test.mjs",
+    "test:desktop": "node scripts/smoke.mjs",
+    "test:web": "npm run build:web && node scripts/web-smoke.mjs",
+    "test:factions": "node scripts/faction-skin-review.mjs",
+    "build": "node scripts/build.mjs",
+    "build:web": "node scripts/build-web.mjs",
+    "deploy:web": "npm run build:web && wrangler deploy"
+  },
+  "devDependencies": {
+    "electron": "44.4.3",
+    "@electron/packager": "20.3.0",
+    "playwright": "1.63.0",
+    "wrangler": "4.41.0"
+  }
+}
